@@ -5,13 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>AI Girlfriend ChatBot - WhatsApp Style</title>
 
-  <!-- ✅ Google AdSense Test Ads -->
+  <!-- ✅ Google AdSense Auto Ads (Test) -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3940256099942544"
      crossorigin="anonymous"></script>
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css" />
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-
   <style>
     html, body {
       margin: 0;
@@ -153,15 +152,6 @@
 </head>
 <body>
 
-  <!-- 🔼 Ad at Top -->
-  <ins class="adsbygoogle"
-       style="display:block; text-align:center; margin-top: 10px;"
-       data-ad-client="ca-pub-3940256099942544"
-       data-ad-slot="6300978111"
-       data-ad-format="auto"
-       data-full-width-responsive="true"></ins>
-  <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-
   <div id="horrorImage"></div>
 
   <div class="chat-wrapper">
@@ -211,15 +201,6 @@
       </div>
     </div>
 
-    <!-- ⬇️ Ad in the middle -->
-    <ins class="adsbygoogle"
-         style="display:block; text-align:center; margin: 10px auto;"
-         data-ad-client="ca-pub-3940256099942544"
-         data-ad-slot="9214589741"
-         data-ad-format="auto"
-         data-full-width-responsive="true"></ins>
-    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-
     <div class="chat-body" id="chatBody"></div>
 
     <div class="chat-input">
@@ -227,15 +208,6 @@
       <button onclick="sendMessage()">Send</button>
     </div>
   </div>
-
-  <!-- 🔽 Ad at Bottom -->
-  <ins class="adsbygoogle"
-       style="display:block; text-align:center; margin-top: 15px;"
-       data-ad-client="ca-pub-3940256099942544"
-       data-ad-slot="6300978111"
-       data-ad-format="auto"
-       data-full-width-responsive="true"></ins>
-  <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
 
   <script>
     const horrorImageDiv = document.getElementById('horrorImage');
@@ -253,7 +225,9 @@
       if (!document.fullscreenElement) {
         document.documentElement.requestFullscreen();
       } else {
-        document.exitFullscreen();
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        }
       }
     }
 
@@ -324,7 +298,7 @@
         const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
           method: "POST",
           headers: {
-            "Authorization": "Bearersk-or-v1-afa41f465d8b0a5fefb4c2a2f3f8b082415c399c0535f22fcb4fe0b8308f8d35",
+            "Authorization": "Bearer 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",
             "Content-Type": "application/json",
             "HTTP-Referer": window.location.origin,
             "X-Title": "AI Girlfriend ChatBot"
