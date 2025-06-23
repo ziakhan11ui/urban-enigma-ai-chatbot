@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Girlfriend ChatBot - WhatsApp Style</title>
+
+  <!-- ✅ Google AdSense Auto Ads (Test) -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3940256099942544"
+     crossorigin="anonymous"></script>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      background: #ece5dd;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    .chat-wrapper {
+      max-width: 600px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      background-color: #ffffff;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .chat-header {
+      background-color: #075e54;
+      color: white;
+      padding: 10px 15px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .profile-area {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+    }
+
+    .profile-area img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .name-edit {
+      border: none;
+      background: transparent;
+      color: white;
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    .chat-body {
+      flex-grow: 1;
+      background: #e5ddd5;
+      padding: 15px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .message {
+      max-width: 70%;
+      padding: 10px 15px;
+      border-radius: 20px;
+      word-wrap: break-word;
+    }
+
+    .message.user {
+      align-self: flex-end;
+      background-color: #dcf8c6;
+    }
+
+    .message.bot {
+      align-self: flex-start;
+      background-color: #ffffff;
+      border: 1px solid #ccc;
+    }
+
+    .chat-input {
+      display: flex;
+      padding: 10px;
+      background-color: #f0f0f0;
+    }
+
+    .chat-input input {
+      flex-grow: 1;
+      border: none;
+      border-radius: 20px;
+      padding: 10px 15px;
+      margin-right: 10px;
+    }
+
+    .chat-input button {
+      background-color: #25d366;
+      color: white;
+      border: none;
+      border-radius: 20px;
+      padding: 10px 20px;
+    }
+
+    #horrorImage {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      background-color: rgba(0, 0, 0, 0.95);
+      z-index: 1000;
+      background-size: cover;
+      background-position: center;
+    }
+
+    .settings-box {
+      background: #ffffff;
+      padding: 15px;
+      display: none;
+      border-top: 1px solid #ddd;
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+
+    .header-icons span {
+      cursor: pointer;
+      margin-left: 10px;
+      font-size: 18px;
+    }
+
+    @media (min-width: 768px) {
+      .chat-wrapper {
+        width: 100vw;
+        height: 100vh;
+        max-width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="horrorImage"></div>
+
+  <div class="chat-wrapper">
+    <div class="chat-header">
+      <div class="profile-area" onclick="triggerProfileChange()">
+        <img id="profilePic" src="https://i.ibb.co/3M4s0xF/default-avatar.png" alt="Profile">
+        <input type="text" id="userName" class="name-edit" value="You" readonly onclick="enableNameEdit(event)">
+        <input type="file" id="profileInput" accept="image/*" onchange="changeProfilePic(event)">
+      </div>
+      <div class="header-icons">
+        <span onclick="toggleFullscreen()">🔳</span>
+        <span onclick="toggleSettings()">⚙️</span>
+      </div>
+    </div>
+
+    <div class="settings-box" id="settingsBox">
+      <div class="form-group">
+        <label for="languageSelect">Language:</label>
+        <select class="form-control" id="languageSelect">
+          <option value="english">English</option>
+          <option value="roman urdu">Roman Urdu</option>
+          <option value="urdu">Urdu (اردو)</option>
+          <option value="hindi">Hindi (हिंदी)</option>
+        </select>
+      </div>
+      <label>Mood:</label><br />
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="chatMode" value="normal" id="modeNormal" checked>
+        <label class="form-check-label" for="modeNormal">Normal</label>
+      </div>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="chatMode" value="sad" id="modeSad">
+        <label class="form-check-label" for="modeSad">Sad</label>
+      </div>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="chatMode" value="horror" id="modeHorror">
+        <label class="form-check-label" for="modeHorror">Horror</label>
+      </div>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="chatMode" value="lovely" id="modeLove">
+        <label class="form-check-label" for="modeLove">Lovely</label>
+      </div>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="chatMode" value="custom" id="modeCustom">
+        <label class="form-check-label" for="modeCustom">Custom:</label>
+        <input type="text" class="form-control form-control-sm d-inline-block ml-2" id="customModeInput" placeholder="e.g., excited" disabled>
+      </div>
+    </div>
+
+    <div class="chat-body" id="chatBody"></div>
+
+    <div class="chat-input">
+      <input type="text" id="userInput" placeholder="Type a message..." onkeydown="if(event.keyCode===13) sendMessage()">
+      <button onclick="sendMessage()">Send</button>
+    </div>
+  </div>
+
+  <script>
+    const horrorImageDiv = document.getElementById('horrorImage');
+    const settingsBox = document.getElementById('settingsBox');
+    const customInput = document.getElementById('customModeInput');
+    const profileInput = document.getElementById('profileInput');
+    const profilePic = document.getElementById('profilePic');
+    const userName = document.getElementById('userName');
+
+    function toggleSettings() {
+      settingsBox.style.display = settingsBox.style.display === 'none' ? 'block' : 'none';
+    }
+
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen();
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        }
+      }
+    }
+
+    function triggerProfileChange() {
+      profileInput.click();
+    }
+
+    function changeProfilePic(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        profilePic.src = reader.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function enableNameEdit(e) {
+      e.stopPropagation();
+      userName.removeAttribute('readonly');
+      userName.focus();
+      userName.select();
+      userName.addEventListener('blur', () => {
+        userName.setAttribute('readonly', true);
+      });
+    }
+
+    document.querySelectorAll('input[name="chatMode"]').forEach(radio => {
+      radio.addEventListener('change', () => {
+        const selected = document.querySelector('input[name="chatMode"]:checked').value;
+        if (selected === 'custom') {
+          customInput.removeAttribute('disabled');
+          customInput.focus();
+        } else {
+          customInput.setAttribute('disabled', 'true');
+          customInput.value = '';
+        }
+        if (selected === 'horror') {
+          horrorImageDiv.style.backgroundImage = "url('horror.avif')";
+          horrorImageDiv.style.display = "block";
+          setTimeout(() => {
+            horrorImageDiv.style.display = "none";
+          }, 3000);
+        }
+      });
+    });
+
+    async function sendMessage() {
+      const input = document.getElementById('userInput').value.trim();
+      if (!input) return;
+      appendMessage(input, 'user');
+
+      const mode = document.querySelector('input[name="chatMode"]:checked').value;
+      const lang = document.getElementById('languageSelect').value;
+
+      let moodPrompt = "";
+      if (mode === "custom") {
+        const mood = customInput.value.trim();
+        if (mood) moodPrompt = `Respond in a ${mood} mood.`;
+      } else if (mode !== "normal") {
+        moodPrompt = `Respond in a ${mode} mood.`;
+      }
+
+      let langPrompt = lang !== "english" ? `Respond in ${lang}.` : "";
+      const fullPrompt = `${langPrompt} ${moodPrompt} ${input}`.trim();
+
+      try {
+        const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+          method: "POST",
+          headers: {
+            "Authorization": "Bearer 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",
+            "Content-Type": "application/json",
+            "HTTP-Referer": window.location.origin,
+            "X-Title": "AI Girlfriend ChatBot"
+          },
+          body: JSON.stringify({
+            model: "deepseek/deepseek-r1:free",
+            messages: [{ role: "user", content: fullPrompt }]
+          })
+        });
+
+        const data = await res.json();
+        const reply = data.choices?.[0]?.message?.content || "No reply.";
+        appendMessage(marked.parse(reply), 'bot', true);
+      } catch (err) {
+        appendMessage("❌ Error: " + err.message, 'bot');
+      }
+
+      document.getElementById('userInput').value = '';
+    }
+
+    function appendMessage(msg, sender, isHTML = false) {
+      const div = document.createElement("div");
+      div.className = `message ${sender}`;
+      div.innerHTML = isHTML ? msg : msg;
+      document.getElementById("chatBody").appendChild(div);
+      document.getElementById("chatBody").scrollTop = document.getElementById("chatBody").scrollHeight;
+    }
+  </script>
+</body>
+</html>
